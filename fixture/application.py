@@ -4,10 +4,18 @@ from fixture.group import GroupHelper
 
 
 class Application:
-    def __init__(self):
-        self.driver = webdriver.Firefox()
+    def __init__(self, browser,  base_url):
+        if browser == "firefox":
+            self.driver = webdriver.Firefox()
+        elif browser == "chrome":
+            self.driver = webdriver.Chrome()
+        elif browser == "ie":
+            self.driver = webdriver.Ie()
+        else:
+            raise ValueError("Unrecognized browser %s" % browser)
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
+        self.base_url = base_url
 
     def is_valid(self):
         try:
@@ -18,7 +26,7 @@ class Application:
 
     def open_home_page(self):
         driver = self.driver
-        driver.get("http://localhost/addressbook/")
+        driver.get(self.base_url)
 
     def destroy(self):
         self.driver.quit()
